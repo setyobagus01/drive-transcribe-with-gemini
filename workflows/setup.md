@@ -1,4 +1,10 @@
 <process>
+**Step 0: Install the skill (if not already installed)**
+
+```bash
+npx skills add setyobagus01/drive-transcribe-with-gemini
+```
+
 **Step 1: Gemini API key**
 
 Ask the user:

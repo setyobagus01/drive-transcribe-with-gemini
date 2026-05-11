@@ -2,6 +2,14 @@
 
 Converts Google Drive files — docs, images, audio, video — to local markdown. Gemini-powered transcription for media; direct text extraction for structured formats. Incremental: only new or changed files are processed.
 
+## Installation
+
+```bash
+npx skills add setyobagus01/drive-transcribe-with-gemini
+```
+
+Then invoke it in Claude Code by typing `/drive-transcribe-with-gemini`.
+
 ## Setup
 
 **Install dependencies (once, globally):**
