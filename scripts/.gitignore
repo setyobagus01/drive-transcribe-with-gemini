@@ -1,0 +1,10 @@
+# User config — never commit
+.env
+*.json
+!package.json
+
+# Temp dirs
+.kb-work/
+__pycache__/
+*.pyc
+*.pyo

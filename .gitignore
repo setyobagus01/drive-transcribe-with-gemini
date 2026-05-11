@@ -1,0 +1,9 @@
+# User config — never commit
+scripts/.env
+scripts/*.json
+
+# Temp dirs
+scripts/.kb-work/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
