@@ -1,6 +1,4 @@
 <converter_behavior>
-## Per-format converter notes
-
 | Format | Converter | Output |
 |--------|-----------|--------|
 | `.docx`, Google Doc | mammoth → python-docx fallback | Markdown |
@@ -15,8 +13,6 @@
 </converter_behavior>
 
 <sheets_output>
-## Sheets output
-
 xlsx/csv files are parsed by pandas into CSV text, then sent to Gemini as an inline prompt. Gemini restructures the content into readable markdown — typically grouped sections when the first column is a repeating label (e.g. interview subjects), or a table for simple data.
 
 **When the output looks off:**

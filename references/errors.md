@@ -39,6 +39,6 @@
 
 **Verify fix:**
 ```powershell
-& "scripts/run.ps1" --status 2>$null
+& "<skill-dir>/scripts/run.ps1" --status 2>$null
 ```
 </error_drive_not_accessible>

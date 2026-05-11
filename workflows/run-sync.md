@@ -46,13 +46,13 @@ bash "<skill-dir>/scripts/run.sh" [flags] # Linux/macOS
 
 Examples:
 ```powershell
-& "scripts/run.ps1" --limit 3
-& "scripts/run.ps1" --type audio
-& "scripts/run.ps1" --type image --limit 5
+& "<skill-dir>/scripts/run.ps1" --limit 3
+& "<skill-dir>/scripts/run.ps1" --type audio
+& "<skill-dir>/scripts/run.ps1" --type image --limit 5
 
 # Multiple types selected — run sequentially:
-& "scripts/run.ps1" --type image --limit 3
-& "scripts/run.ps1" --type doc --limit 3
+& "<skill-dir>/scripts/run.ps1" --type image --limit 3
+& "<skill-dir>/scripts/run.ps1" --type doc --limit 3
 ```
 
 Set timeout to 600000ms — audio/video files can take several minutes each.

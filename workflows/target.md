@@ -25,12 +25,11 @@ Valid types: `doc`, `image`, `audio`, `video`
 - Combine with `--limit 1` for a single test before bulk processing
 - Audio/video files can take 1–5 minutes each; set timeout to 600000ms
 
-**After running, check the output file in Obsidian at:**
-`H:\Documents\Obsidian\Vault\content-wiki\sources\`
+**After running, check the output file at your configured `OUTPUT_DIR` path.**
 </process>
 
 <success_criteria>
 - [ ] Target file found and processed (DONE log line)
-- [ ] Output `.md` file present in Obsidian vault
+- [ ] Output `.md` file present in configured `OUTPUT_DIR`
 - [ ] No FAIL in log output
 </success_criteria>

@@ -3,14 +3,29 @@ name: drive-transcribe-with-gemini
 description: Converts Google Drive files — docs, images, audio, video — to local markdown. Use for Drive→markdown sync, status checks, or targeting specific files/types. Gemini-powered transcription; incremental reruns.
 ---
 
-<requirements>
-**Python:** 3.9+
+<objective>
+Converts Google Drive files — documents, spreadsheets, images, audio, and video — to local markdown files using Gemini transcription. Handles incremental sync (only unprocessed files), status checks, and targeted processing by file name or format type. The output is structured markdown written to a local directory, suitable for note vaults or knowledge bases.
+</objective>
 
-**Install dependencies (once, globally):**
+<quick_start>
+1. Install dependencies (once):
 ```powershell
 pip install -r "<skill-dir>/scripts/requirements.txt"
 ```
-Replace `<skill-dir>` with where the skill is installed (e.g. `~/.claude/skills/drive-transcribe-with-gemini`).
+2. Create `scripts\.env` with at minimum:
+```
+GEMINI_API_KEY=your_key_here
+SOURCE_FOLDER_ID=your_drive_folder_id
+```
+3. Verify setup with a dry status check:
+```powershell
+& "<skill-dir>/scripts/run.ps1" --status
+```
+If it lists files without errors, you're ready to sync.
+</quick_start>
+
+<requirements>
+**Python:** 3.9+
 
 **.env file** — create at `scripts\.env`:
 | Variable | Required | Description |
@@ -67,9 +82,17 @@ What do you want to do?
 | 3, "target", "file", "type", "specific", "audio", "video", "image", "doc" | `workflows/target.md` |
 | 4, "setup", "configure", "api key", "folder", "first time", "credential" | `workflows/setup.md` |
 | 5, "error", "timeout", "403", "404", "access denied", "not found", "troubleshoot" | Read `references/errors.md` and guide the user through the matching fix |
+| _(unrecognized)_ | Re-display the `<intake>` menu and ask the user to pick a number |
 
 **After reading the workflow, follow it exactly.**
 </routing>
+
+<success_criteria>
+- [ ] User intent was identified and mapped to a workflow
+- [ ] Correct workflow file was read before taking action
+- [ ] At least one file was processed without a FAIL log line, or the user received a clear status or error summary
+- [ ] Output confirmed present in configured `OUTPUT_DIR` (for processing workflows)
+</success_criteria>
 
 <reference_index>
 - **CLI flags and usage:** `references/cli-reference.md`

@@ -44,7 +44,7 @@ If they choose **service account**:
 Ask the user:
 > "Where do you want the converted markdown files saved?"
 
-- Default is `./wiki/sources` (relative to the project root)
+- Default is `./output` (relative to the project root)
 - They can provide any absolute or relative path
 
 **Step 5: Install dependencies (once)**
@@ -82,7 +82,7 @@ Omit `OUTPUT_DIR` if they're happy with the default (`./output`).
 **Step 7: Verify setup**
 
 ```powershell
-& "scripts/run.ps1" --status 2>$null
+& "<skill-dir>/scripts/run.ps1" --status 2>$null
 ```
 
 - If it shows file counts → setup is complete
