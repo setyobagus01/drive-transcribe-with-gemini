@@ -1,5 +1,6 @@
 """Google Drive client - list files and download."""
 from pathlib import Path
+from google.auth.credentials import AnonymousCredentials
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -16,9 +17,12 @@ GOOGLE_WORKSPACE_EXPORT = {
 
 
 def get_service():
-    creds = service_account.Credentials.from_service_account_file(
-        config.SERVICE_ACCOUNT_FILE, scopes=SCOPES
-    )
+    if config.SERVICE_ACCOUNT_FILE and Path(config.SERVICE_ACCOUNT_FILE).exists():
+        creds = service_account.Credentials.from_service_account_file(
+            config.SERVICE_ACCOUNT_FILE, scopes=SCOPES
+        )
+    else:
+        creds = AnonymousCredentials()
     return build("drive", "v3", credentials=creds, cache_discovery=False)
 
 

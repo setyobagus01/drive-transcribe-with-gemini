@@ -6,7 +6,7 @@ load_dotenv()
 
 # Google Drive
 SOURCE_FOLDER_ID = os.getenv("SOURCE_FOLDER_ID", "YOUR_SOURCE_FOLDER_ID")
-SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_CREDENTIALS", "credentials.json")
+SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_CREDENTIALS")  # None when not set → public access
 
 # Gemini
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
