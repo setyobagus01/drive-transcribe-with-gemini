@@ -55,15 +55,21 @@ pip3 install -r .claude/skills/drive-transcribe-with-gemini/scripts/requirements
 
 Requires Python 3.9+.
 
-**2. Create `.env`** in `scripts/`:
+**2. Set up Google Cloud (required for Drive access):**
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → create or select a project
+2. Enable the **Google Drive API**: APIs & Services → Library → search → Enable
+3. Create a **Service Account** → download the JSON key → save as `credential.json` in `scripts/`
+4. Share your Drive folder with the service account email (`@...iam.gserviceaccount.com`) → **Viewer**
+
+**3. Create `.env`** in `scripts/`:
 
 ```env
-GEMINI_API_KEY="..."        # free key at https://aistudio.google.com/apikey
-SOURCE_FOLDER_ID="..."      # Drive folder ID — part after /folders/ in the URL
-OUTPUT_DIR="./output"       # optional: output root (default: ./output)
+GEMINI_API_KEY="..."            # free key at https://aistudio.google.com/apikey
+SOURCE_FOLDER_ID="..."          # Drive folder ID — part after /folders/ in the URL
+GOOGLE_CREDENTIALS="./credential.json"   # service account JSON from step above
+OUTPUT_DIR="./output"           # optional: output root (default: ./output)
 ```
-
-> **Private folder?** Leave `GOOGLE_CREDENTIALS` out for now — the skill will attempt public access first and ask for a service account `credential.json` only if the folder turns out to be private.
 
 ## Usage
 

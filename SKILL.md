@@ -16,6 +16,7 @@ pip install -r "<skill-dir>/scripts/requirements.txt"
 ```
 GEMINI_API_KEY=your_key_here
 SOURCE_FOLDER_ID=your_drive_folder_id
+GOOGLE_CREDENTIALS=./credential.json
 ```
 3. Verify setup with a dry status check:
 ```powershell
@@ -27,12 +28,18 @@ If it lists files without errors, you're ready to sync.
 <requirements>
 **Python:** 3.9+
 
+**Google Cloud setup (required):**
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → create or select a project
+2. Enable the **Google Drive API** for that project
+3. Create a **Service Account** → download the JSON key → save it as `credential.json` in `scripts/`
+4. Share your Drive folder with the service account email (ends in `@...iam.gserviceaccount.com`) → **Viewer**
+
 **.env file** — create at `scripts\.env`:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `GEMINI_API_KEY` | yes | Get free at https://aistudio.google.com/apikey |
 | `SOURCE_FOLDER_ID` | yes | Drive folder ID — the part after `/folders/` in the URL |
-| `GOOGLE_CREDENTIALS` | if private folder | Path to service account `credential.json` |
+| `GOOGLE_CREDENTIALS` | yes | Path to service account JSON, e.g. `./credential.json` |
 | `OUTPUT_DIR` | no | Output folder (default: `./output`) |
 </requirements>
 
@@ -92,11 +99,12 @@ If they provide a credential path:
 |-----|----------|-------------|
 | `GEMINI_API_KEY` | yes | Gemini API key |
 | `SOURCE_FOLDER_ID` | yes | Google Drive folder ID |
+| `GOOGLE_CREDENTIALS` | yes | Path to service account JSON |
 | `OUTPUT_DIR` | no | Output directory (default: `./output`) |
 
-3. **If both required keys are present** → proceed to `<intake>` immediately. Do NOT ask about config.
+3. **If all three required keys are present** → proceed to `<intake>` immediately. Do NOT ask about config.
 
-4. **If either required key is missing** → do NOT proceed to `<intake>`. Instead:
+4. **If any required key is missing** → do NOT proceed to `<intake>`. Instead:
    - Tell the user which key(s) are missing.
    - Ask for the missing values using AskUserQuestion (one question per missing key, or combine if both are missing).
    - Also ask for `OUTPUT_DIR` only if it is absent and the user hasn't confirmed the default.

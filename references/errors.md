@@ -17,25 +17,11 @@
 
 **Root cause:** The Drive folder or its files are not accessible to the account or method being used.
 
-**Option A — Make the folder public (simplest)**
+The script always uses a service account to call the Drive API. Fix checklist:
 
-1. Open the folder in Google Drive
-2. Right-click → **Share**
-3. Change access to **Anyone with the link** → **Viewer**
-4. Click **Done**
-5. Remove (or leave absent) the `GOOGLE_CREDENTIALS` line from `.env` — the script will use public access
-
-**Option B — Use a service account with credential.json (for private folders)**
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/) → your project
-2. Enable the **Google Drive API**
-3. Create a **Service Account** → download the JSON key → save as `credential.json`
-4. Copy the service account email (ends in `@...iam.gserviceaccount.com`)
-5. Open your Drive folder → Share → paste the service account email → **Viewer**
-6. Set in `.env`:
-   ```env
-   GOOGLE_CREDENTIALS="./credential.json"
-   ```
+1. **Drive API enabled?** → Go to Google Cloud Console → APIs & Services → confirm "Google Drive API" is enabled for your project. If not, enable it and wait ~1 min.
+2. **Service account JSON correct?** → Check `GOOGLE_CREDENTIALS` in `.env` points to the right file and the file exists.
+3. **Folder shared with service account?** → Open the Drive folder → Share → confirm the service account email (ends in `@...iam.gserviceaccount.com`) is listed as Viewer. If not, add it.
 
 **Verify fix:**
 ```powershell
