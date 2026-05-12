@@ -64,9 +64,11 @@ Claude: derive `<skill-dir>` from the path where you read this SKILL.md.
 | Symptom | Cause | Action |
 |---------|-------|--------|
 | `Set GEMINI_API_KEY env var` | Missing key in `.env` | Run setup (option 4) |
-| `HttpError 403 / 404` | Drive not accessible | Follow `<drive_access>` fallback below |
+| `429 Too Many Requests` / `RESOURCE_EXHAUSTED` | Gemini free tier limit hit | See `references/errors.md` — use `--limit`, lower `GEMINI_RPM`, or upgrade |
+| `accessNotConfigured` | Drive API not enabled | Enable Drive API in Google Cloud Console |
+| `HttpError 403` (Drive) | Service account not added to folder | Share folder with SA email → Viewer |
+| `FileNotFoundError: credentials.json` | Missing service account file | Set `GOOGLE_CREDENTIALS` in `.env` |
 | Hangs / timeout | File too large or rate limit hit | See `references/errors.md` |
-| `FileNotFoundError: credentials.json` | Missing service account file | Follow `<drive_access>` fallback below |
 </essential_principles>
 
 <drive_access>

@@ -12,6 +12,35 @@
 4. **Increase per-file timeout in config** — `PER_FILE_TIMEOUT` in `config.py` defaults to 1800s; raise it for very long videos if needed.
 </error_timeout>
 
+<error_429_rate_limit>
+**Symptom:** `429 Too Many Requests` or `RESOURCE_EXHAUSTED` during sync.
+
+**Root cause:** Gemini free tier has a low RPM (requests per minute) and RPD (requests per day) limit — typically 15 RPM and 1,500 RPD on `gemini-2.5-flash-lite`, lower on `gemini-2.5-flash`.
+
+**Fixes:**
+
+1. **Use `--limit` to process in small batches** — run a few files at a time and pause between runs:
+   ```powershell
+   & "<skill-dir>/scripts/run.ps1" --limit 5
+   ```
+   Wait a minute, then run again. Incremental sync means already-processed files are skipped automatically.
+
+2. **Lower `GEMINI_RPM` in `config.py`** — free tier is ~15 RPM; set it to match:
+   ```python
+   GEMINI_RPM = 15
+   ```
+   The script uses this to throttle requests internally.
+
+3. **Process one type at a time** — spread load across sessions:
+   ```powershell
+   & "<skill-dir>/scripts/run.ps1" --type doc --limit 10
+   # next session:
+   & "<skill-dir>/scripts/run.ps1" --type image --limit 10
+   ```
+
+4. **Upgrade to Gemini paid tier** — removes RPM/RPD caps. Get a paid key at https://aistudio.google.com/apikey and replace `GEMINI_API_KEY` in `.env`.
+</error_429_rate_limit>
+
 <error_drive_not_accessible>
 **Symptom:** `HttpError 403`, `HttpError 404`, `File not found`, or `Access denied` when listing or downloading files.
 
