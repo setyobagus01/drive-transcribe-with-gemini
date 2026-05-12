@@ -1,6 +1,6 @@
 ---
 name: drive-transcribe-with-gemini
-description: Converts Google Drive files — docs, images, audio, video — to local markdown. Use for Drive→markdown sync, status checks, or targeting specific files/types. Gemini-powered transcription; incremental reruns.
+description: Converts Google Drive files — docs, images, audio, video — to local markdown. Use for Drive→markdown sync, status checks, targeting specific files/types, or adding a Google Drive folder as a source. Gemini-powered transcription; incremental reruns.
 ---
 
 <objective>
@@ -57,10 +57,54 @@ Claude: derive `<skill-dir>` from the path where you read this SKILL.md.
 | Symptom | Cause | Action |
 |---------|-------|--------|
 | `Set GEMINI_API_KEY env var` | Missing key in `.env` | Run setup (option 4) |
-| `HttpError 403 / 404` | Drive not accessible | See `references/errors.md` |
+| `HttpError 403 / 404` | Drive not accessible | Follow `<drive_access>` fallback below |
 | Hangs / timeout | File too large or rate limit hit | See `references/errors.md` |
-| `FileNotFoundError: credentials.json` | Missing service account file | Set `GOOGLE_CREDENTIALS` in `.env` |
+| `FileNotFoundError: credentials.json` | Missing service account file | Follow `<drive_access>` fallback below |
 </essential_principles>
+
+<drive_access>
+**Always try public folder first. Fall back to service account only on failure.**
+
+**Step 1 — Attempt without credentials (public folder)**
+Run the command as-is. Do NOT add `GOOGLE_CREDENTIALS` to `.env` unless Step 2 is triggered.
+
+**Step 2 — On `HttpError 403`, `HttpError 404`, `Access denied`, or `File not found`:**
+The folder is private. Ask the user:
+
+> "Your Drive folder appears to be private. Do you have a service account `credential.json` file?"
+> - **Yes** → ask for the path to the file
+> - **No** → instruct them to make the folder public: Google Drive → right-click folder → Share → Anyone with the link → Viewer → Done; then retry Step 1
+
+If they provide a credential path:
+1. Add `GOOGLE_CREDENTIALS="<path>"` to `<skill-dir>/scripts/.env`
+2. Retry the original command
+
+**Never ask about credentials upfront — only ask when Step 2 is triggered.**
+</drive_access>
+
+<pre_flight>
+**Before showing the intake menu or executing any command, check the `.env` file.**
+
+1. Read `<skill-dir>/scripts/.env` (it may not exist yet).
+2. Check for these keys:
+
+| Key | Required | Description |
+|-----|----------|-------------|
+| `GEMINI_API_KEY` | yes | Gemini API key |
+| `SOURCE_FOLDER_ID` | yes | Google Drive folder ID |
+| `OUTPUT_DIR` | no | Output directory (default: `./output`) |
+
+3. **If both required keys are present** → proceed to `<intake>` immediately. Do NOT ask about config.
+
+4. **If either required key is missing** → do NOT proceed to `<intake>`. Instead:
+   - Tell the user which key(s) are missing.
+   - Ask for the missing values using AskUserQuestion (one question per missing key, or combine if both are missing).
+   - Also ask for `OUTPUT_DIR` only if it is absent and the user hasn't confirmed the default.
+   - Once all values are collected, write them into `<skill-dir>/scripts/.env` (create the file if it doesn't exist, preserve any existing keys).
+   - Then proceed to `<intake>`.
+
+**Do not run any script or command until this check passes.**
+</pre_flight>
 
 <intake>
 What do you want to do?

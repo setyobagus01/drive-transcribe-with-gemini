@@ -1,6 +1,37 @@
 # drive-transcribe-with-gemini
 
-Converts Google Drive files — docs, images, audio, video — to local markdown. Gemini-powered transcription for media; direct text extraction for structured formats. Incremental: only new or changed files are processed.
+> **Convert Google Drive files to Markdown using Gemini AI.** Docs, spreadsheets, PDFs, images, audio, and video — all transcribed and synced to local `.md` files. A [Claude Code](https://claude.ai/code) skill with incremental updates (only new or changed files are processed).
+
+![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
+![Claude Code Skill](https://img.shields.io/badge/claude--code-skill-blueviolet)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
+## Features
+
+- **AI transcription** — images, audio, video, and PDFs described/transcribed via Gemini 2.5
+- **Text extraction** — `.docx`, `.xlsx`, `.csv`, `.pptx`, Google Docs/Sheets/Slides converted natively
+- **Incremental sync** — manifest-based change detection; skips already-processed files
+- **Folder structure preserved** — output mirrors your Drive hierarchy
+- **Auto index** — generates `_INDEX.md` table of contents after each run
+- **Claude Code integration** — invoke with `/drive-transcribe-with-gemini` in any project
+
+## Use cases
+
+- Sync a Google Drive folder into an Obsidian / Notion-style **markdown vault**
+- Build a **RAG knowledge base** from Drive documents, meeting recordings, and slide decks
+- **Transcribe audio and video** files stored in Drive (interviews, lectures, podcasts)
+- Convert **scanned PDFs and images** to searchable text
+- Keep a local **offline mirror** of a shared Drive folder in plain text
+
+## Supported formats
+
+| Category | Extensions |
+|----------|-----------|
+| Documents | `.docx` `.pptx` `.txt` `.md` `.pdf` + Google Docs / Slides |
+| Spreadsheets | `.xlsx` `.csv` + Google Sheets |
+| Images | `.jpg` `.png` `.gif` `.webp` `.bmp` `.heic` `.heif` |
+| Audio | `.mp3` `.wav` `.m4a` `.ogg` `.flac` |
+| Video | `.mp4` `.mov` `.avi` `.webm` `.mkv` |
 
 ## Installation
 
@@ -12,7 +43,7 @@ Then invoke it in Claude Code by typing `/drive-transcribe-with-gemini`.
 
 ## Setup
 
-**Install dependencies (once, globally):**
+**1. Install Python dependencies (once):**
 
 ```powershell
 # Windows
@@ -24,14 +55,15 @@ pip3 install -r .claude/skills/drive-transcribe-with-gemini/scripts/requirements
 
 Requires Python 3.9+.
 
-**Create `.env`** in `scripts/`:
+**2. Create `.env`** in `scripts/`:
 
 ```env
-GEMINI_API_KEY="..."
-SOURCE_FOLDER_ID="..."               # Drive folder ID — part after /folders/ in the URL
-GOOGLE_CREDENTIALS="./credential.json"   # optional: only if folder is private
-OUTPUT_DIR="./output"                # optional: output root (default: ./output)
+GEMINI_API_KEY="..."        # free key at https://aistudio.google.com/apikey
+SOURCE_FOLDER_ID="..."      # Drive folder ID — part after /folders/ in the URL
+OUTPUT_DIR="./output"       # optional: output root (default: ./output)
 ```
+
+> **Private folder?** Leave `GOOGLE_CREDENTIALS` out for now — the skill will attempt public access first and ask for a service account `credential.json` only if the folder turns out to be private.
 
 ## Usage
 
@@ -47,9 +79,9 @@ bash .claude/skills/drive-transcribe-with-gemini/scripts/run.sh [flags]
 |------|-------------|
 | _(none)_ | Process all pending files |
 | `--status` | Show pending/removed/synced counts without processing |
-| `--limit 3` | Process first 3 files (test batch) |
+| `--limit 3` | Process first N files (useful for test runs) |
 | `--type audio` | Process all files of a type: `doc`, `image`, `audio`, `video` |
-| `--file "name"` | Process files matching name (case-insensitive) |
+| `--file "name"` | Process files matching name (case-insensitive substring) |
 
 Flags can be combined: `--type audio --limit 1`
 
@@ -62,7 +94,7 @@ Flags can be combined: `--type audio --limit 1`
    - `.docx` / Google Docs — text extraction via mammoth
    - `.xlsx / .csv` / Google Sheets — interpreted by Gemini
    - `.pptx` / Google Slides — text extraction per slide
-   - `.jpg / .png / .heic / .mp3 / .mp4 / .pdf` etc. — transcribed/described via Gemini
+   - `.jpg / .png / .heic / .mp3 / .mp4 / .pdf` etc. — transcribed/described via Gemini 2.5
    - `.txt / .md` — copied as-is
 5. Writes output to `OUTPUT_DIR/` and rebuilds `_INDEX.md`
 
@@ -104,3 +136,9 @@ converter: docx
     manifest.py        # change detection
     index.py           # _INDEX.md builder + frontmatter
 ```
+
+## Related
+
+- [Google Gemini API](https://ai.google.dev/) — AI model used for transcription
+- [Claude Code](https://claude.ai/code) — AI coding CLI this skill runs inside
+- [npx skills](https://github.com/anthropics/claude-code-skills) — skill package manager
